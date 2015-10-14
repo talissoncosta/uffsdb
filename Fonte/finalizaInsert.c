@@ -181,7 +181,6 @@ int finalizaInsert(char *nome, column *c){
             fwrite(&valorDouble,sizeof(valorDouble),1,dados);
         }
         else if (auxT[t].tipo == 'C'){ // Grava um dado do tipo char.
-            printf("to no char\n");
 
             if (strlen(auxC->valorCampo) > (sizeof(char))) {
                 printf("ERROR: column \"%s\" expect char.\n", auxC->nomeCampo);
