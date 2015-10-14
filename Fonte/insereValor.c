@@ -15,13 +15,16 @@ column *insereValor(table  *tab, column *c, char *nomeCampo, char *valorCampo) {
         if (e == NULL)    {
             return ERRO_DE_ALOCACAO;
         }
-
         memset(e, 0, sizeof(column));
 
         int tam = retornaTamanhoValorCampo(nomeCampo, tab);
         char tipo = retornaTamanhoTipoDoCampo(nomeCampo,tab);
 
-        int nTam = strlen(valorCampo);
+        int nTam;
+        if(valorCampo != '\0')
+            nTam = strlen(valorCampo);
+        else
+            nTam = 1;
 
         if (tipo == 'S') {
             nTam = tam;
@@ -44,19 +47,21 @@ column *insereValor(table  *tab, column *c, char *nomeCampo, char *valorCampo) {
            printf("WARNING: field name exceeded the size limit and was truncated.\n");
         }
 
-
         strncpylower(e->nomeCampo, nomeCampo, n-1);
-
-        n = strlen(valorCampo);
+        if(valorCampo != '\0')
+            n = strlen(valorCampo);
+        else
+            n = 1;
 
         if (n > tam && tipo == 'S') {
             n = tam;
             printf("WARNING: value of column \"%s\" exceeded the size limit and was truncated.\n", nomeCampo);
         }
-
-        for(i=0; i < n; i++) e->valorCampo[i] = valorCampo[i];
-            e->valorCampo[i] = '\0';
-
+        if(valorCampo != '\0'){
+            for(i=0; i < n; i++) e->valorCampo[i] = valorCampo[i];
+                e->valorCampo[i] = '\0';
+        }else
+            e->valorCampo[0] = '\0';
         //strncpy(e->valorCampo, valorCampo,n);
 
         e->next = NULL;
@@ -67,7 +72,6 @@ column *insereValor(table  *tab, column *c, char *nomeCampo, char *valorCampo) {
             if(aux->next == NULL){
 
                 e = (column *)malloc(sizeof(column));
-
                 if (e == NULL) {
                     return ERRO_DE_ALOCACAO;
                 }
@@ -76,8 +80,11 @@ column *insereValor(table  *tab, column *c, char *nomeCampo, char *valorCampo) {
 
                 int tam = retornaTamanhoValorCampo(nomeCampo, tab);
                 char tipo = retornaTamanhoTipoDoCampo(nomeCampo,tab);
-
-                int nTam = strlen(valorCampo);
+                int nTam;
+                if(valorCampo != '\0')
+                    nTam = strlen(valorCampo);
+                else
+                    nTam = 1;
 
                 if (tipo == 'S') {
                     nTam = tam;
@@ -106,15 +113,22 @@ column *insereValor(table  *tab, column *c, char *nomeCampo, char *valorCampo) {
 
                 //strncpy(e->nomeCampo, nomeCampo,n);
 
-                n = strlen(valorCampo);
+                if(valorCampo != '\0')
+                    n = strlen(valorCampo);
+                else
+                    n = 1;
+
 
                 if (n > tam && tipo == 'S') {
                     n = tam;
                     printf("WARNING: value of column \"%s\"exceeded the size limit and was truncated.\n", nomeCampo);
                 }
 
-                for(i=0; i < n; i++) e->valorCampo[i] = valorCampo[i];
-                e->valorCampo[i] = '\0';
+                if(valorCampo != '\0'){
+                    for(i=0; i < n; i++) e->valorCampo[i] = valorCampo[i];
+                        e->valorCampo[i] = '\0';
+                }else
+                   e->valorCampo[0] = '\0';
 
                 //strncpy(e->valorCampo, valorCampo,n);
                 aux->next = e;

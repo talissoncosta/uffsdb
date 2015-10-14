@@ -33,6 +33,15 @@ int finalizaInsert(char *nome, column *c){
 					free(tab); // Libera a memoria da estrutura.
 					free(tab2); // Libera a memoria da estrutura.
                     return ERRO_CHAVE_PRIMARIA;
+                }                
+                if (erro == ERRO_CHAVE_PRIMARIA_NULA){
+                    printf("ERROR:  null value in column '%s' violates not-null constraint \"%s_pkey\"\nDETAIL: Primary Key (%s) is null.\n",temp->nomeCampo,nome,temp->nomeCampo);
+
+                    free(auxT); // Libera a memoria da estrutura.
+                    //free(temp); // Libera a memoria da estrutura.
+                    free(tab); // Libera a memoria da estrutura.
+                    free(tab2); // Libera a memoria da estrutura.
+                    return ERRO_CHAVE_PRIMARIA_NULA;
                 }
 
                 break;
@@ -103,6 +112,8 @@ int finalizaInsert(char *nome, column *c){
     for(auxC = c, t = 0; auxC != NULL; auxC = auxC->next, t++){
         if (t >= dicio.qtdCampos)
             t = 0;
+    
+
 
         if (auxT[t].tipo == 'S'){ // Grava um dado do tipo string.
 
@@ -170,6 +181,7 @@ int finalizaInsert(char *nome, column *c){
             fwrite(&valorDouble,sizeof(valorDouble),1,dados);
         }
         else if (auxT[t].tipo == 'C'){ // Grava um dado do tipo char.
+            printf("to no char\n");
 
             if (strlen(auxC->valorCampo) > (sizeof(char))) {
                 printf("ERROR: column \"%s\" expect char.\n", auxC->nomeCampo);
